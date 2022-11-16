@@ -15,7 +15,7 @@
 #include <iostream>
 
 /// @brief HIH8120 I2C address
-#define ADDR 0x27 
+#define HIH8120_ADDR 0x27 
 /// @brief Servo channel
 #define SERVOCHANNEL 0
 /// @brief Light channel
@@ -124,9 +124,9 @@ void heaterOnOff(std::string status)
 */
 void printLightLevel()
 {
-    greenhouse::photoresistor photoresistor(2);
-    photoresistor.readCurrentLightLevel();
-    std::cout << "Light level: " << photoresistor.lightLevel << "     " << std::endl;
+    greenhouse::lightsensor lightsensor(2);
+    lightsensor.readCurrentLightLevel();
+    std::cout << "Light level: " << lightsensor.lightLevel << "     " << std::endl;
 }
 
 /**

@@ -27,13 +27,6 @@
  * For more details, see http://www.derekmolloy.ie/
  */
 
-
-#define HIH61XX_DEFAULT_ADDRESS 0x27
-
-static const uint8_t defaultAddress = HIH61XX_DEFAULT_ADDRESS;
-    static const uint8_t powerUpDelay_ms = 75; // Data sheet indicates 60ms
-    static const uint8_t conversionDelay_ms = 45; // "Typically 36.65ms"
-
 #include"I2CDevice.h"
 #include<iostream>
 #include<sstream>
@@ -182,6 +175,7 @@ unsigned char* I2CDevice::readDevice(unsigned int number){
  * the call on the last like.
  * @param number the total number of registers to dump, defaults to 0xff
  */
+
 void I2CDevice::debugDumpRegisters(unsigned int number){
 	cout << "Dumping Registers for Debug Purposes:" << endl;
 	unsigned char *registers = this->readRegisters(number);
@@ -208,11 +202,3 @@ I2CDevice::~I2CDevice() {
 }
 
 } /* namespace exploringBB */
-
-
-
-
-class readSensorBs : private I2CDevice
-{
-
-}
