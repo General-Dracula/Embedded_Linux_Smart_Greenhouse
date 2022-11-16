@@ -10,25 +10,26 @@ const executing_sync = require("child_process").execSync;
 const executeFile = require("child_process").execFile;
 
 //Set heater's default value to closed
-executeFile("./greenhouse", ["setHeaterStatus", "off"], (error) => {
+executeFile("./greenhouse", ["setHeaterStatus", "off"], (error, stdout, stderr) => {
   if (error) {
     throw error;
   }
 });
 
 //Set light's default value to 0.
-executeFile("./greenhouse", ["setLedLight", "0"], (error) => {
+executeFile("./greenhouse", ["setLedLight", "0"], (error, stdout, stderr) => {
   if (error) {
     throw error;
   }
 });
 
 //Set window's default value to closed
-executeFile("./greenhouse", ["setWindowStatus", "close"], (error) => {
+executeFile("./greenhouse", ["setWindowStatus", "close"], (error, stdout, stderr) => {
   if (error) {
     throw error;
   }
 });
+
 
 //Creating a server and start to listen
 var server = http
@@ -62,12 +63,8 @@ socket_io.on("connection", function (socket) {
   // Passing the data that was sent to the function and the socket.
   socket.on("latest_data", (data) => handleRefreshData(socket, data));
   socket.on("changeStateLight", (data) => handleChangeStateLight(socket, data));
-  socket.on("changeWindowState", (data) =>
-    handleChangeWindowState(socket, data)
-  );
-  socket.on("changeHeaterState", (data) =>
-    handleChangeHeaterState(socket, data)
-  );
+  socket.on("changeWindowState", (data) =>handleChangeWindowState(socket, data));
+  socket.on("changeHeaterState", (data) =>handleChangeHeaterState(socket, data));
 });
 
 // Read all current values form the peripherals and after returning it to the client connected to the socket.
@@ -151,7 +148,7 @@ async function handleChangeWindowState(socket, data) {
   } else {
     command = "close";
   }
-  executeFile("./greenhouse", ["setWindowStatus", command], (error) => {
+  executeFile("./greenhouse", ["setWindowStatus", command], (error, stdout, stderr) => {
     if (error) {
       throw error;
     }
@@ -174,7 +171,7 @@ async function handleChangeHeaterState(socket, data) {
   } else {
     command = "off";
   }
-  executeFile("./greenhouse", ["setHeaterStatus", command], (error) => {
+  executeFile("./greenhouse", ["setHeaterStatus", command], (error, stdout, stderr) => {
     if (error) {
       throw error;
     }
@@ -190,12 +187,3 @@ async function handleChangeHeaterState(socket, data) {
 
 console.log("Server Running ...");
 
-//Requirements
-// See temp
-// See humidity
-// See ligh intensity
-// See window open or closed
-// See heater status
-// Set light intensity level
-// Set window open or closed
-// Set heater status
