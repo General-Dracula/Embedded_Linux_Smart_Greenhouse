@@ -3,158 +3,168 @@
  * @author Florina Toldea(299116@via.dk)
  * @date 2022-11-14
  -->
- <!DOCTYPE html>
- <html>
-   <head>
-     <title>Greenhouse assignment</title>
-     <script src="/socket.io/socket.io.js"></script>
-     <script>
-       // Establishing connection with server
-       var socket = socket_io.connect();
- 
-       // Function that gets the latest data from the server every five seconds.
-       function latest_data() {
-         socket.emit("latest_data", { state: 1 });
-       }
-       // Call to make function repeat itself.
-       setInterval(latest_data, 5000);
- 
-       // Function made to help checking the input from the user.
-       function isNumber(str) {
-         if (typeof str != "string") return false;
-         return (
-           // use type coercion to ensure type safety.
-           !isNaN(str) && !isNaN(parseFloat(str))
-         );
-       }
- 
-       // Handles user input to change the led light level.
-       function changeLightState() {
-         // Read text from input box with "getElementById".
-         const value = document.getElementById("lightLevel").value;
-         var exit = false;
- 
-         // Checking that number is not float.
-         for (let i = 0; i < value.length; i++) {
-           if (value[i] == ".") {
-             exit = true;
-           }
-         }
- 
-         // Sends signal to server when the value is between 0-100(as integer).
-         if (
-           !exit &&
-           isNumber(value) &&
-           parseInt(value) >= 0 &&
-           parseInt(value) <= 100
-         ) {
-           console.log(value);
-           const valueToNumber = parseInt(value);
-           socket.emit("changeStateLight", '{"state":' + valueToNumber + "}");
-         } else {
-           document.getElementById("lightLevel").value =
-             "Enter valid integer from 0-100";
-         }
-       }
- 
-       // Handles window button for open/close.
-       function changeWindowState(state) {
-         if (state == 1) {
-           socket.emit("changeWindowState", '{"state":1}');
-         } else if (state == 0) {
-           socket.emit("changeWindowState", '{"state":0}');
-         }
-       }
- 
-       // Handles heater buttons for on/off.
-       function changeHeaterState(state) {
-         if (state == 1) {
-           socket.emit("changeHeaterState", '{"state":1}');
-         } else if (state == 0) {
-           socket.emit("changeHeaterState", '{"state":0}');
-         }
-       }
- 
-       // Handle response of data sent form server.
-       socket.on("responseRefresh", (args) => {
-         console.log("Got refresh response from server");
- 
-         // Arguments from json.
-         document.getElementById("temperatureStatus").innerHTML =
-           "Status: " + args.temperature + " C";
-         document.getElementById("humidityStatus").innerHTML =
-           "Status: " + args.humidity + " %RH";
-         document.getElementById("lightStatus").innerHTML =
-           "Status: " + args.light + " %";
-         document.getElementById("windowStatus").innerHTML =
-           "Status: " + args.window;
-         document.getElementById("heaterStatus").innerHTML =
-           "Status: " + args.heater;
-         document.getElementById("ledLightStatus").innerHTML =
-           "Status: " + args.ledLight + " %";
-       });
- 
-       // Response to set the light level request.
-       socket.on("responseSetLight", (args) => {
-         console.log("Got light response from server");
-         document.getElementById("ledLightStatus").innerHTML =
-           "Status: " + args.ledLight + " %";
-       });
- 
-       // Response to set the heater state request.
-       socket.on("responseSetHeater", (args) => {
-         console.log("Got heater response from server");
-         document.getElementById("heaterStatus").innerHTML =
-           "Status: " + args.heater;
-       });
- 
-       // Response to set the window state request.
-       socket.on("responseSetWindow", (args) => {
-         console.log("Got window response from server");
-         document.getElementById("windowStatus").innerHTML =
-           "Status: " + args.window;
-       });
-     </script>
-   </head>
-   <body>
-     <style>
-       body {background-color: rgb(75, 75, 75);}
-       p    {color: rgb(255, 242, 0);}
-       h2   {color:crimson;
-         font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;}
-       </style>
-       
-       <h2>Greenhouse Assignment by Mircea & Florina</h2>
-       <h2></h2>
-       <h2></h2>
-   
-       <h2>Window</h2>
-       <p id="windowStatus">Window position:</p>
-       <button type="button" onclick="changeWindowState(1);">
-         Open Window
-       </button>
-       <button type="button" onclick="changeWindowState(0);">
-         Close window
-       </button>
- 
-       <h2>Heater</h2>
-       <p id="heaterStatus">Heater on/off:</p>
-       <button type="button" onclick="changeHeaterState(1);">Turn on heater</button>
-       <button type="button" onclick="changeHeaterState(0);">Turn off heater</button>
- 
-     <h2>Temperature</h2>
-     <p id="temperatureStatus">Temp in C:</p>
- 
-     <h2>Humidity</h2>
-     <p id="humidityStatus">Humidity:</p>
- 
-     <h2>Light level</h2>
-     <p id="lightStatus">Light level:</p>
- 
-     <h2>Led light level</h2>
-     <p id="ledLightStatus">Light bulbs level:</p>
-     <input type="text" id="lightLevel" name="fname" /><br /><br />
-     <button type="button" onclick="changeLightState();">Set value</button>
-   </body>
- </html>
- 
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Greenhouse assignment</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Establishing connection with server
+    var socket = socket_io.connect();
+
+    // Function that gets the latest data from the server every five seconds.
+    function latest_data() {
+      socket.emit("latest_data", { state: 1 });
+    }
+    // Call to make function repeat itself.
+    setInterval(latest_data, 5000);
+
+    // Function made to help checking the input from the user.
+    function isNumber(str) {
+      if (typeof str != "string") return false;
+      return (
+        // use type coercion to ensure type safety.
+        !isNaN(str) && !isNaN(parseFloat(str))
+      );
+    }
+
+    // Handles user input to change the led light level.
+    function changeLightState() {
+      // Read text from input box with "getElementById".
+      const value = document.getElementById("lightLevel").value;
+      var exit = false;
+
+      // Checking that number is not float.
+      for (let i = 0; i < value.length; i++) {
+        if (value[i] == ".") {
+          exit = true;
+        }
+      }
+
+      // Sends signal to server when the value is between 0-100(as integer).
+      if (
+        !exit &&
+        isNumber(value) &&
+        parseInt(value) >= 0 &&
+        parseInt(value) <= 100
+      ) {
+        console.log(value);
+        const valueToNumber = parseInt(value);
+        socket.emit("changeStateLight", '{"state":' + valueToNumber + "}");
+      } else {
+        document.getElementById("lightLevel").value =
+          "Enter valid integer from 0-100";
+      }
+    }
+
+    // Handles window button for open/close.
+    function changeWindowState(state) {
+      if (state == 1) {
+        socket.emit("changeWindowState", '{"state":1}');
+      } else if (state == 0) {
+        socket.emit("changeWindowState", '{"state":0}');
+      }
+    }
+
+    // Handles heater buttons for on/off.
+    function changeHeaterState(state) {
+      if (state == 1) {
+        socket.emit("changeHeaterState", '{"state":1}');
+      } else if (state == 0) {
+        socket.emit("changeHeaterState", '{"state":0}');
+      }
+    }
+
+    // Handle response of data sent form server.
+    socket.on("responseRefresh", (args) => {
+      console.log("Got refresh response from server");
+
+      // Arguments from json.
+      document.getElementById("temperatureStatus").innerHTML =
+        "Status: " + args.temperature + " C";
+      document.getElementById("humidityStatus").innerHTML =
+        "Status: " + args.humidity + " %RH";
+      document.getElementById("lightStatus").innerHTML =
+        "Status: " + args.light + " %";
+      document.getElementById("windowStatus").innerHTML =
+        "Status: " + args.window;
+      document.getElementById("heaterStatus").innerHTML =
+        "Status: " + args.heater;
+      document.getElementById("ledLightStatus").innerHTML =
+        "Status: " + args.ledLight + " %";
+    });
+
+    // Response to set the light level request.
+    socket.on("responseSetLight", (args) => {
+      console.log("Got light response from server");
+      document.getElementById("ledLightStatus").innerHTML =
+        "Status: " + args.ledLight + " %";
+    });
+
+    // Response to set the heater state request.
+    socket.on("responseSetHeater", (args) => {
+      console.log("Got heater response from server");
+      document.getElementById("heaterStatus").innerHTML =
+        "Status: " + args.heater;
+    });
+
+    // Response to set the window state request.
+    socket.on("responseSetWindow", (args) => {
+      console.log("Got window response from server");
+      document.getElementById("windowStatus").innerHTML =
+        "Status: " + args.window;
+    });
+  </script>
+</head>
+
+<body>
+  <style>
+    body {
+      background-color: rgb(75, 75, 75);
+    }
+
+    p {
+      color: rgb(255, 242, 0);
+    }
+
+    h2 {
+      color: crimson;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+  </style>
+
+  <h2>Greenhouse Assignment by Mircea & Florina</h2>
+  <h2></h2>
+  <h2></h2>
+
+  <h2>Window</h2>
+  <p id="windowStatus">Window position:</p>
+  <button type="button" onclick="changeWindowState(1);">
+    Open Window
+  </button>
+  <button type="button" onclick="changeWindowState(0);">
+    Close window
+  </button>
+
+  <h2>Heater</h2>
+  <p id="heaterStatus">Heater on/off:</p>
+  <button type="button" onclick="changeHeaterState(1);">Turn on heater</button>
+  <button type="button" onclick="changeHeaterState(0);">Turn off heater</button>
+
+  <h2>Temperature</h2>
+  <p id="temperatureStatus">Temp in C:</p>
+
+  <h2>Humidity</h2>
+  <p id="humidityStatus">Humidity:</p>
+
+  <h2>Light level</h2>
+  <p id="lightStatus">Light level:</p>
+
+  <h2>Led light level</h2>
+  <p id="ledLightStatus">Light bulbs level:</p>
+  <input type="text" id="lightLevel" name="fname" /><br /><br />
+  <button type="button" onclick="changeLightState();">Set value</button>
+</body>
+
+</html>
