@@ -36,7 +36,7 @@ namespace greenhouse
     public:
         /// @brief Constructor
         /// @param I2CBus int address
-        photoresistor(unsigned int I2CBus);
+        lightsensor(unsigned int I2CBus);
         /// @brief Read the current light level
         void readCurrentLightLevel();
     };
