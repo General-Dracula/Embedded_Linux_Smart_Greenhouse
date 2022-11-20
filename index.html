@@ -19,7 +19,7 @@
       // Call to make function repeat itself.
       setInterval(latest_data, 5000);
 
-      // Function to help checking of the input from the user.
+      // Function made to help checking the input from the user.
       function isNumber(str) {
         if (typeof str != "string") return false;
         return (
@@ -41,7 +41,7 @@
           }
         }
 
-        // Sends signal to server if value is 0-100 integer.
+        // Sends signal to server when the value is between 0-100(as integer).
         if (
           !exit &&
           isNumber(value) &&
@@ -101,22 +101,23 @@
           "Status: " + args.ledLight + " %";
       });
 
-      // Response to set the window state request.
-      socket.on("responseSetWindow", (args) => {
-        console.log("Got window response from server");
-        document.getElementById("windowStatus").innerHTML =
-          "Status: " + args.window;
-      });
-
       // Response to set the heater state request.
       socket.on("responseSetHeater", (args) => {
         console.log("Got heater response from server");
         document.getElementById("heaterStatus").innerHTML =
           "Status: " + args.heater;
       });
+
+      // Response to set the window state request.
+      socket.on("responseSetWindow", (args) => {
+        console.log("Got window response from server");
+        document.getElementById("windowStatus").innerHTML =
+          "Status: " + args.window;
+      });
     </script>
   </head>
   <body>
+    <body style="background-color: #1c87c9"></body>
     <!-- User interface: -->
 
     <h2>Temperature</h2>
@@ -135,12 +136,16 @@
 
     <h2>Window</h2>
     <p id="windowStatus">Status:</p>
-    <button type="button" onclick="changeWindowState(1);">OPENED</button>
-    <button type="button" onclick="changeWindowState(0);">CLOSED</button>
+    <button type="button" onclick="changeWindowState(1);">
+      Windou is opened
+    </button>
+    <button type="button" onclick="changeWindowState(0);">
+      Window is closed
+    </button>
 
     <h2>Heater</h2>
     <p id="heaterStatus">Status:</p>
-    <button type="button" onclick="changeHeaterState(1);">ON</button>
-    <button type="button" onclick="changeHeaterState(0);">OFF</button>
+    <button type="button" onclick="changeHeaterState(1);">Heater is on</button>
+    <button type="button" onclick="changeHeaterState(0);">Heater is off</button>
   </body>
 </html>
