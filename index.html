@@ -120,11 +120,14 @@
     <body style="background-color: #1c87c9"></body>
     <!-- User interface: -->
 
-    <h2>Temperature</h2>
-    <p id="temperatureStatus">Status:</p>
-
-    <h2>Humidity</h2>
-    <p id="humidityStatus">Status:</p>
+    <h2>Window</h2>
+    <p id="windowStatus">Status:</p>
+    <button type="button" onclick="changeWindowState(1);">
+      Windou is opened
+    </button>
+    <button type="button" onclick="changeWindowState(0);">
+      Window is closed
+    </button>
 
     <h2>Light level</h2>
     <p id="lightStatus">Status:</p>
@@ -134,14 +137,11 @@
     <input type="text" id="lightLevel" name="fname" /><br /><br />
     <button type="button" onclick="changeLightState();">Set value</button>
 
-    <h2>Window</h2>
-    <p id="windowStatus">Status:</p>
-    <button type="button" onclick="changeWindowState(1);">
-      Windou is opened
-    </button>
-    <button type="button" onclick="changeWindowState(0);">
-      Window is closed
-    </button>
+    <h2>Temperature</h2>
+    <p id="temperatureStatus">Status:</p>
+
+    <h2>Humidity</h2>
+    <p id="humidityStatus">Status:</p>
 
     <h2>Heater</h2>
     <p id="heaterStatus">Status:</p>
