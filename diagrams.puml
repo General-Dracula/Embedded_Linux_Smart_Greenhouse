@@ -1,0 +1,131 @@
+@startuml
+
+
+entity main.cpp
+{
+    + void printTemperatureAndHumidity()
+    + void printTemperature()
+    + void printHumidity()
+    + void controlLightIntensity(int intensity)
+    + void controlServo(std::string status)
+    + void readFile(std::string path)
+    + void heaterOnOff(std::string status)
+    + void printLightLevel()
+    + void readWindowPos()
+    + void readHeater()
+    + void readLightIntensity()
+    + void main(int argc, char **argv)
+}
+
+interface hih8120.h
+{
+    + unsigned int i2xc
+    + float temperature
+    + float humidity
+    -unsigned int I2CBus
+    -unsigned int I2CAddress
+    + hih8120(unsigned int I2CBus, unsigned int I2CAddress = 0x53)
+    + void readCurrentTemperatureAndHumidity()
+    -float mapValueForHum(unsigned int value)
+    -float maoValueForTemp(unsigned int value)
+}
+
+class hih8120.cpp
+{
+    + hih8120::hih8120(unsigned int I2CBus, unsigned int I2CAddress)
+    + void hih8120::readCurrentTemperatureAndHumidity()
+    + float hih8120::mapValueForHum(unsigned int value)
+    + float hih8120::maoValueForTemp(unsigned int value)
+}
+
+interface pwm.h
+{
+    + pwm()
+    + void sendPwm(int duty_cycle, int period, int channel)
+    + void setPwmByPercentForLight(int perc, int period, int channel)
+    - std;:fstream fs
+}
+
+class pwm.cpp
+{
+    + void pwm::sendPwm
+    + void pwm::setPwmByPercentForLight
+}
+
+interface lightsensor.h
+{
+    + float printLightLevel
+    + photoresistor(unsigned int I2CBus)
+    + void readCurrentLightLevel()
+    - unsigned int I2CBus
+    -unsigned int I2CAddress
+    -float convertVoltsToPercentage(unsigned int value)
+}
+
+class lightsensor.cpp
+{
+    + lightsensor::lightsensor(unsigned int I2CBus)
+    + void lightsensor::readCurrentLightLevel
+    + float lightsensor::convertVoltsToPercentage(unsigned int value)
+}
+
+interface I2CDevice.h
+{
+    -unsigned int bus
+    -unsigned int device
+    -int file
+
+    +I2CDevice(unsigned int bus, unsigned int device)
+    +virtual int open()
+    +virtual int write(unsigned char value)
+    +virtual unsigned char readRegister(unsigned int registerAddress)
+    +virtual unsigned char* readRegisters(unsigned int number, unsigned int fromAddress=0)
+    +virtual unsigned char* readDevice(unsigned int number)
+    +virtual int writeRegister(unsigned int registerAddress, unsigned char value)
+    +virtual void debugDumpRegisters(unsigned int number = 0xff)
+    +virtual void close()
+    +virtual ~I2CDevice()
+}
+
+class I2CDevice.cpp
+{
+    +I2CDevice::I2CDevice(unsigned int bus, unsigned int device)
+    +int I2CDevice::open()
+    +int I2CDevice::writeRegister(unsigned int registerAddress, unsigned char value)
+    +int I2CDevice::write(unsigned char value)
+    +unsigned char I2CDevice::readRegister(unsigned int registerAddress)
+    +unsigned char* I2CDevice::readRegisters(unsigned int number, unsigned int fromAddress)
+    +unsigned char* I2CDevice::readDevice(unsigned int number)
+    +void I2CDevice::debugDumpRegisters(unsigned int number)
+    +void I2CDevice::close()
+    +I2CDevice::~I2CDevice()
+    +class readSensorBs : private I2CDevice
+}
+
+interface heater.h
+{
+    - std::fstream fs
+    + Heater()
+    + void turnOnHeater()
+    + void turnOffHeater()
+}
+
+class heater.cpp
+{
+    + void Heater::turnOnHeater()
+    + void Heater::turnOffHeater()
+}
+
+class heater.cpp implements heater.h
+class I2CDevice.cpp implements I2CDevice.h
+class lightsensor.cpp implements lightsensor.h
+class hih8120.cpp implements hih8120.h
+class pwm.cpp implements pwm.h
+
+main.cpp -> heater.h
+main.cpp -> lightsensor.h
+main.cpp -> hih8120.h
+main.cpp -> pwm.h
+hih8120.h -> I2CDevice.h
+
+@enduml
